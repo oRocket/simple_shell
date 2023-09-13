@@ -20,7 +20,8 @@ static size_t buffer_position = 0;  /* Position within the buffer */
 
 extern char **environ;
 
-typedef struct {
+typedef struct
+{
 	char *command;
 	char *args[MAX_INPUT_SIZE / 2];
 } Command;

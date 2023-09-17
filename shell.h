@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <stdarg.h>
 
 #define MAX_INPUT_SIZE 1024
 #define BUFFER_SIZE 1024
@@ -31,5 +32,6 @@ void execute_command(Command *cmd);
 void parse_input(char *input, Command *cmd);
 ssize_t my_getline(char **lineptr, size_t *n, FILE *stream);
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
+int cprint(const char *format, ...);
 
 #endif /* shell.h */

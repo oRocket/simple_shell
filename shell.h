@@ -13,6 +13,10 @@
 
 #define MAX_INPUT_LENGTH 1024
 #define MAX_ARGS 64
+#define MAX_INPUT_SIZE 1024
+extern size_t buffer_position;
+extern char input_buffer[MAX_INPUT_SIZE];
+
 
 /* Struct to hold shell state */
 typedef struct {
@@ -33,6 +37,6 @@ void cd_command(ShellState *shell, char *args[], int arg_count);
 /* Function to execute external commands */
 void execute_command(ShellState *shell, char *args[]);
 
-
+ssize_t my_getline(char **lineptr, size_t *n, FILE *stream);
 
 #endif /* shell.h */

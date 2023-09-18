@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 		return (1); /* Return an error code */
 	}
 
-	run_shell(void);
+	run_shell();
 
 	return (0);
 }

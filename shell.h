@@ -17,11 +17,10 @@
 extern size_t buffer_position;
 extern char input_buffer[MAX_INPUT_SIZE];
 
-
 /* Struct to hold shell state */
 typedef struct {
-    char current_dir[PATH_MAX];
-    int exit_status;
+	char current_dir[PATH_MAX];
+	int exit_status;
 } ShellState;
 
 /* Custom function to split input into arguments */
@@ -36,9 +35,15 @@ void cd_command(ShellState *shell, char *args[], int arg_count);
 /* Function to execute external commands */
 void execute_command(ShellState *shell, char *args[]);
 
+void handle_unsetenv(char *args[], int arg_count);
+void handle_setenv(char *args[], int arg_count);
+void handle_exit(ShellState *shell, char *args[], int arg_count);
+void print_exit_msg(int status);
+void run_shell(void);
+void print_usage(const char *program_name);
+
 ssize_t my_getline(char **lineptr, size_t *n, FILE *stream);
 size_t my_strlen(const char *str);
 int my_strcmp(const char *str1, const char *str2);
-int my_execvp(const char *file, char *const argv[]);
 
 #endif /* shell.h */

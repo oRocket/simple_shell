@@ -8,8 +8,8 @@
  */
 ssize_t my_getline(char **lineptr, size_t *n, FILE *stream)
 {
-	size_t buffer_position = 0, total_chars_read = 0, line_length, remaining_chars;
-	char *newline, input_buffer[MAX_INPUT_SIZE];
+	size_t total_chars_read = 0, line_length, remaining_chars;
+	char *newline;
 	ssize_t chars_read;
 
 	if (lineptr == NULL || n == NULL || stream == NULL)
@@ -92,7 +92,7 @@ ssize_t my_getline(char **lineptr, size_t *n, FILE *stream)
 			buffer_position += remaining_chars;
 		}
 		/* Reset the buffer position if we have reached the end */
-		if (buffer_position == (size_t)chars_read)
+		if (buffer_position == chars_read)
 		{
 			buffer_position = 0;
 		}

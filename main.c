@@ -1,23 +1,48 @@
 #include "shell.h"
 /**
- * main - Entry point for the shell program.
- *
- * @argc: The number of command-line arguments.
- * @argv: An array of command-line argument strings.
- *
- * Authors: Albert and Benedict.
- *
- * Return: 0 on success, 1 on error.
+ * main - Entry point of the programme
+ * Return: Always 0 (Success)
  */
-int main(int argc, char *argv[])
+int main(void)
 {
-	if (argc != 1)
+	char input[MAX_INPUT_SIZE], **env = environ;
+	ssize_t read_size;
+	Command cmd;
+
+	while (1)
 	{
-		print_usage(argv[0]);
-		return (1); /* Return an error code */
+		display_prompt();
+		read_size = read(STDIN_FILENO, input, MAX_INPUT_SIZE);
+
+		if (read_size == -1)
+		{
+			perror("read");
+			exit(EXIT_FAILURE);
+		}
+		else if (read_size == 0)
+		{
+			printf("\n");
+			break;
+		}
+		input[read_size - 1] = '\0';
+
+		if (strcmp(input, "env") == 0)
+		{
+			while (*env != NULL)
+			{
+				printf("%s\n", *env);
+				env++;
+			}
+			continue;
+		}
+
+		if (strcmp(input, "exit") == 0)
+		{
+			exit(EXIT_SUCCESS);
+		}
+
+		parse_input(input, &cmd);
+		execute_command(&cmd);
 	}
-
-	run_shell();
-
 	return (0);
 }

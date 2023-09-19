@@ -1,80 +1,54 @@
 #include "shell.h"
+#include <unistd.h>
+/**
+ * main - Entry point for the simple shell.
+ *
+ * Return: Always 0.
+ */
 int main(void)
 {
-	pid_t pid;
-	int status;
-	char input[MAX_INPUT_LENGTH];
-	char *tokens[MAX_INPUT_LENGTH], *token;
+	int arg_count = 0;
+	char input[MAX_INPUT_LENGTH], *token, *args[MAX_ARGS];
 
 	while (1)
 	{
-		int token_count = 0;
-
-		/* Display a prompt */
-		if (write(STDOUT_FILENO, "simple_shell> ", 14) == -1)
-		{
-			perror("write");
-			exit(EXIT_FAILURE);
-		}
+		write(STDOUT_FILENO, "$ ", 2);
+		fflush(stdout);
 
 		/* Read user input */
-		if (fgets(input, sizeof(input), stdin) == NULL)
+		if (fgets(input, MAX_INPUT_LENGTH, stdin) == NULL)
 		{
-			if (write(STDOUT_FILENO, "\n", 1) == -1)
-			{
-				perror("write");
-				exit(EXIT_FAILURE);
-			}
-			break;
+			/* Handle Ctrl+D (end of file) */
+			write(STDOUT_FILENO, "\nExiting shell.\n", 16);
+			exit(0);
 		}
 
-		/* Remove the newline character at the end */
-		input[strlen(input) - 1] = '\0';
+		input[strlen(input) - 1] = '\0'; /* Remove the newline character */
 
-		/* Parse the input into command and arguments */
+		/* Tokenize input into command and arguments */
 		token = strtok(input, " ");
 		while (token != NULL)
 		{
-			tokens[token_count++] = token;
+			args[arg_count++] = token;
 			token = strtok(NULL, " ");
 		}
+		args[arg_count] = NULL;
 
-		tokens[token_count] = NULL; /* Null-terminate the tokens array */
-
-		/* Fork a child process */
-		pid = fork();
-
-		if (pid == -1)
+		if (arg_count == 0)
 		{
-			perror("fork");
-			exit(EXIT_FAILURE);
+			continue; /* No command entered, prompt again */
 		}
 
-		if (pid == 0) /* Child process */
+		/* Check if the command exists in PATH and execute it */
+		if (execvp(args[0], args) == -1)
 		{
-			/* Execute the command using execvp */
-			if (execvp(tokens[0], tokens) == -1)
-			{
-				perror("execvp");
-				exit(EXIT_FAILURE);
-			}
-		}
-		else /* Parent process */
-		{
-			if (waitpid(pid, &status, 0) == -1)
-			{
-				perror("waitpid");
-				exit(EXIT_FAILURE);
-			}
+			perror("exec");
+			write(STDOUT_FILENO, "Command not found: ", 19);
+			write(STDOUT_FILENO, args[0], strlen(args[0]));
+			write(STDOUT_FILENO, "\n", 1);
 		}
 	}
 
-	/* Display exit message */
-	if (write(STDOUT_FILENO, "Exiting the simple shell.\n", 27) == -1)
-	{
-		perror("write");
-		exit(EXIT_FAILURE);
-	}
-
-	return (EXIT_SUCCESS);
+	return (0);
 }
+

@@ -6,8 +6,9 @@
  */
 int main(void)
 {
+	pid_t pid;
 	int status;
-	char *args[] = {input, NULL};
+	char *args[] = {"/bin/ls", "-l", "/usr/", NULL};
 	char *envp[] = {NULL};
 	char input[MAX_INPUT_LENGTH];
 
@@ -35,7 +36,7 @@ int main(void)
 		input[strlen(input) - 1] = '\0';
 
 		/* Fork a child process */
-		pid_t pid = fork();
+		pid = fork();
 
 		if (pid == -1)
 		{

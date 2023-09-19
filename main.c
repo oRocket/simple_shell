@@ -1,19 +1,15 @@
 #include "shell.h"
-/**
- * main - Entry point for the simple shell program
- *
- * Return: Always EXIT_SUCCESS
- */
 int main(void)
 {
 	pid_t pid;
 	int status;
-	char *args[] = {"/bin/ls", "-l", "/usr/", NULL};
-	char *envp[] = {NULL};
 	char input[MAX_INPUT_LENGTH];
+	char *tokens[MAX_INPUT_LENGTH], *token;
 
 	while (1)
 	{
+		int token_count = 0;
+
 		/* Display a prompt */
 		if (write(STDOUT_FILENO, "simple_shell> ", 14) == -1)
 		{
@@ -35,6 +31,16 @@ int main(void)
 		/* Remove the newline character at the end */
 		input[strlen(input) - 1] = '\0';
 
+		/* Parse the input into command and arguments */
+		token = strtok(input, " ");
+		while (token != NULL)
+		{
+			tokens[token_count++] = token;
+			token = strtok(NULL, " ");
+		}
+
+		tokens[token_count] = NULL; /* Null-terminate the tokens array */
+
 		/* Fork a child process */
 		pid = fork();
 
@@ -46,10 +52,10 @@ int main(void)
 
 		if (pid == 0) /* Child process */
 		{
-			/* Execute the command using execve */
-			if (execve(input, args, envp) == -1)
+			/* Execute the command using execvp */
+			if (execvp(tokens[0], tokens) == -1)
 			{
-				perror("execve");
+				perror("execvp");
 				exit(EXIT_FAILURE);
 			}
 		}

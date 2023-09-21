@@ -1,6 +1,6 @@
 #include "shell.h"
 /**
- * str_tok - a function that separates strings
+ * star_tok - a function that separates strings
  * @line: pointer to an array
  * @del: characters
  * Return: A pointer
@@ -13,6 +13,7 @@ char *str_tok(char *line, char *del)
 
 	if (line != NULL)
 		str = line;
+
 	while (*str != '\0')
 	{
 		j = 0;
@@ -30,6 +31,7 @@ char *str_tok(char *line, char *del)
 
 	if (*copystr == '\0')
 		return (NULL);
+
 	while (*str != '\0')
 	{
 		j = 0;

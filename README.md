@@ -1,3 +1,1 @@
-Simple shell
-
-Task 0
+Simple shell project
